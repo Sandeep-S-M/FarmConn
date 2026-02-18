@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-6">
+    <div class="card shadow mt-4">
+      <div class="card-body">
+        <h3 class="card-title text-center mb-4">Join Farmer Connect</h3>
+        <form action="" method="post" novalidate>
+          {{ form.hidden_tag() }}
+          <div class="mb-3">
+            {{ form.username.label(class="form-label") }}
+            {{ form.username(class="form-control" + (" is-invalid" if form.username.errors else "")) }}
+            {% for error in form.username.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <div class="mb-3">
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "")) }}
+            {% for error in form.email.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              {{ form.password.label(class="form-label") }}
+              {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else "")) }}
+              {% for error in form.password.errors %}
+              <div class="invalid-feedback">{{ error }}</div>
+              {% endfor %}
+            </div>
+            <div class="col-md-6">
+              {{ form.confirm_password.label(class="form-label") }}
+              {{ form.confirm_password(class="form-control" + (" is-invalid" if form.confirm_password.errors else ""))
+              }}
+              {% for error in form.confirm_password.errors %}
+              <div class="invalid-feedback">{{ error }}</div>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="mb-3">
+            {{ form.role.label(class="form-label") }}
+            {{ form.role(class="form-select" + (" is-invalid" if form.role.errors else "")) }}
+            <div class="form-text">Choose <strong>Nursery</strong> if you sell plants, or <strong>Farmer</strong> if you
+              buy them.</div>
+            {% for error in form.role.errors %}
+            <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+          </div>
+          <div class="mb-3">
+            {{ form.location.label(class="form-label") }}
+            {{ form.location(class="form-control") }}
+          </div>
+          <div class="d-grid gap-2">
+            {{ form.submit(class="btn btn-success") }}
+          </div>
+        </form>
+      </div>
+      <div class="card-footer text-center">
+        <small>Already have an account? <a href="{{ url_for('auth.login') }}">Sign In</a></small>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

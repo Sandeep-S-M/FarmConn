@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="jumbotron p-5 mb-4 bg-light rounded-3 text-center hero-section"
+  style="background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'); background-size: cover; color: white;">
+  <div class="container-fluid py-5">
+    <h1 class="display-5 fw-bold">Welcome to Farmer Connect</h1>
+    <p class="col-md-8 fs-4 mx-auto">Bridging the gap between Farmers, Experts, and Buyers. Connect, Trade, and Grow
+      together.</p>
+    {% if not current_user.is_authenticated %}
+    <a class="btn btn-primary btn-lg" href="{{ url_for('auth.signup') }}" role="button">Join Now</a>
+    {% else %}
+    <a class="btn btn-success btn-lg" href="{{ url_for('main.dashboard') }}" role="button">Go to Dashboard</a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="row align-items-md-stretch">
+  <div class="col-md-4 mb-3">
+    <div class="h-100 p-5 text-white bg-success rounded-3">
+      <h2>Marketplace</h2>
+      <p>Directly buy and sell fresh produce using our integrated marketplace. No middlemen, just fair prices.</p>
+      <a class="btn btn-outline-light" href="{{ url_for('main.marketplace') }}">Browse Products</a>
+    </div>
+  </div>
+  <div class="col-md-4 mb-3">
+    <div class="h-100 p-5 bg-light border rounded-3">
+      <h2>Expert Forum</h2>
+      <p>Have a query about your crop? Ask our community of experts and get real-time solutions.</p>
+      <a class="btn btn-outline-dark" href="{{ url_for('main.forum') }}">Visit Forum</a>
+    </div>
+  </div>
+  <div class="col-md-4 mb-3">
+    <div class="h-100 p-5 text-white bg-secondary rounded-3">
+      <h2>Plant Calculator</h2>
+      <p>Estimate the number of plants you can grow in your field with our smart spacing calculator.</p>
+      <a class="btn btn-outline-light" href="{{ url_for('main.calculator') }}">Calculate Now</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

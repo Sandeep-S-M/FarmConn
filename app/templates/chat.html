@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-4">
+    <div class="list-group">
+      <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1">Dr. Green (Expert)</h5>
+          <small>3 days ago</small>
+        </div>
+        <p class="mb-1">Your tomato plants look healthy...</p>
+      </a>
+      <a href="#" class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1">Buyer John</h5>
+          <small class="text-muted">1 week ago</small>
+        </div>
+        <p class="mb-1 text-muted">Is the wheat harvest ready?</p>
+      </a>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="card h-100">
+      <div class="card-header bg-white">
+        <strong>Dr. Green</strong> <span class="badge bg-success">Expert</span>
+      </div>
+      <div class="card-body" style="height: 400px; overflow-y: auto;">
+        <!-- Messages Placeholder -->
+        <div class="d-flex flex-column gap-2">
+          <div class="align-self-start bg-light p-2 rounded">
+            Hello, I have a question about my crops.
+          </div>
+          <div class="align-self-end bg-success text-white p-2 rounded">
+            Sure, send me a picture and I can help.
+          </div>
+          {% for msg in messages %}
+          <div
+            class="align-self-{{ 'end bg-success text-white' if msg.sender_id == current_user.id else 'start bg-light' }} p-2 rounded">
+            {{ msg.content }}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="card-footer bg-white">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Type a message...">
+          <button class="btn btn-primary" type="button"><i class="bi bi-send"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

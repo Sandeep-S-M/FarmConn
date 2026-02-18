@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>Community Forum</h2>
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPostModal">
+    <i class="bi bi-pencil-square"></i> New Post
+  </button>
+</div>
+
+<!-- New Post Modal -->
+<div class="modal fade" id="newPostModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Create New Post</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="postTitle" class="form-label">Title</label>
+            <input type="text" class="form-control" id="postTitle">
+          </div>
+          <div class="mb-3">
+            <label for="postContent" class="form-label">Content</label>
+            <textarea class="form-control" id="postContent" rows="3"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Publish</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="list-group">
+  {% for post in posts %}
+  <a href="#"
+    class="list-group-item list-group-item-action flex-column align-items-start mb-3 border rounded shadow-sm">
+    <div class="d-flex w-100 justify-content-between">
+      <h5 class="mb-1">{{ post.title }}</h5>
+      <small class="text-muted">{{ post.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+    </div>
+    <p class="mb-1">{{ post.content }}</p>
+    <small class="text-success"><i class="bi bi-person"></i> {{ post.author.username }}</small>
+  </a>
+  {% else %}
+  <div class="text-center py-5">
+    <p class="text-muted">No discussions yet. Start one!</p>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

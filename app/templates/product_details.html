@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="card shadow-lg">
+    <div class="row g-0">
+      <div class="col-md-6">
+        <img src="{{ product.image_url or 'https://via.placeholder.com/600x400?text=Product' }}"
+          class="img-fluid rounded-start w-100 h-100" style="object-fit: cover; min-height: 400px;"
+          alt="{{ product.name }}">
+      </div>
+      <div class="col-md-6">
+        <div class="card-body p-4">
+          <h1 class="card-title fw-bold mb-3">{{ product.name }}</h1>
+
+          <div class="d-flex align-items-center mb-3">
+            <span class="badge bg-success me-2">₹{{ product.price }} / plant</span>
+            <span class="text-muted">Available Quantity: {{ product.quantity }}</span>
+          </div>
+
+          <div class="mb-4">
+            <h5 class="text-muted mb-2">Details</h5>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item"><strong>Breed/Variety:</strong> {{ product.breed }}</li>
+              <li class="list-group-item"><strong>Seller:</strong> <a
+                  href="{{ url_for('main.profile', username=product.seller.username) }}" class="text-decoration-none">{{
+                  product.seller.nursery_name or product.seller.username }}</a></li>
+              <li class="list-group-item"><strong>Location:</strong> {{ product.seller.location }}</li>
+              <li class="list-group-item"><strong>Plant Age:</strong> {{ product.plant_age_days or 'N/A' }} days</li>
+              <li class="list-group-item"><strong>Available For:</strong> {{ product.available_days or 'N/A' }} days
+              </li>
+            </ul>
+          </div>
+
+          <div class="mb-4">
+            <h5 class="text-muted">Description</h5>
+            <p class="card-text">{{ product.description }}</p>
+          </div>
+
+          <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+            <a href="{{ url_for('main.marketplace') }}" class="btn btn-outline-secondary">Back to Marketplace</a>
+
+            {% if current_user == product.seller %}
+            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editProductModal">
+              <i class="bi bi-pencil-square"></i> Edit Product
+            </button>
+            {% elif current_user.role == 'farmer' %}
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#orderNowModal">
+              <i class="bi bi-cart-check"></i> Order Now
+            </button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Product Modal -->
+{% if current_user == product.seller %}
+<div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post">
+          {{ form.hidden_tag() }}
+          <div class="mb-3">
+            {{ form.name.label(class="form-label") }}
+            {{ form.name(class="form-control") }}
+          </div>
+          <div class="mb-3">
+            {{ form.breed.label(class="form-label") }}
+            {{ form.breed(class="form-control") }}
+          </div>
+          <div class="row">
+            <div class="col-6 mb-3">
+              {{ form.price.label(class="form-label") }}
+              {{ form.price(class="form-control") }}
+            </div>
+            <div class="col-6 mb-3">
+              {{ form.quantity.label(class="form-label") }}
+              {{ form.quantity(class="form-control") }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6 mb-3">
+              {{ form.plant_age_days.label(class="form-label") }}
+              {{ form.plant_age_days(class="form-control") }}
+            </div>
+            <div class="col-6 mb-3">
+              {{ form.available_days.label(class="form-label") }}
+              {{ form.available_days(class="form-control") }}
+            </div>
+          </div>
+          <div class="mb-3">
+            {{ form.image_url.label(class="form-label") }}
+            {{ form.image_url(class="form-control") }}
+          </div>
+          <div class="mb-3">
+            {{ form.description.label(class="form-label") }}
+            {{ form.description(class="form-control", rows=2) }}
+          </div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-warning">Update Product</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- Order Now Modal -->
+<div class="modal fade" id="orderNowModal" tabindex="-1" aria-labelledby="orderNowModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="orderNowModalLabel">Place Order for {{ product.name }}</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-3">Price: <strong>₹{{ product.price }} / plant</strong></p>
+        <form action="" method="post">
+          {{ order_form.hidden_tag() }}
+          <div class="mb-3">
+            {{ order_form.quantity.label(class="form-label") }}
+            {{ order_form.quantity(class="form-control", min="1", max=product.quantity) }}
+            <div class="form-text">Max available: {{ product.quantity }}</div>
+          </div>
+          <div class="mb-3">
+            {{ order_form.delivery_address.label(class="form-label") }}
+            {{ order_form.delivery_address(class="form-control", rows=3, placeholder="Enter full delivery address") }}
+          </div>
+
+          <div class="alert alert-info py-2 small">
+            <i class="bi bi-info-circle"></i> Total Price will be calculated upon confirmation.
+          </div>
+
+          <div class="d-grid">
+            {{ order_form.submit(class="btn btn-success") }}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

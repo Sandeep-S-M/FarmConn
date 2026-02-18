@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card shadow">
+      <div class="card-header bg-success text-white">
+        <h3 class="card-title mb-0"><i class="bi bi-calculator"></i> Plant Population Calculator</h3>
+      </div>
+      <div class="card-body">
+        <form id="calcForm">
+          <div class="mb-3">
+            <label for="acres" class="form-label">Total Land Area (Acres)</label>
+            <input type="number" class="form-control" id="acres" step="0.01" required placeholder="e.g. 1.5">
+            <div class="form-text text-muted" id="areaInFeet">1 Acre = 43,560 sq. ft.</div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label for="h_spacing" class="form-label">Plant Horizontal Spacing (ft)</label>
+              <input type="number" class="form-control" id="h_spacing" step="0.1" required
+                placeholder="Distance between plants">
+            </div>
+            <div class="col-md-6">
+              <label for="v_spacing" class="form-label">Plant Vertical Spacing (ft)</label>
+              <input type="number" class="form-control" id="v_spacing" step="0.1" required
+                placeholder="Distance between rows">
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-success w-100">Calculate Plants</button>
+        </form>
+
+        <div id="result" class="mt-4 p-3 bg-light rounded d-none">
+          <div class="text-center">
+            <h5 class="text-secondary mb-3">Total Land Area: <span id="totalSqFt" class="text-dark fw-bold">0</span> sq.
+              ft.</h5>
+            <h3 class="text-success">Total Plants Required: <span id="totalPlants" class="fw-bold">0</span></h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.getElementById('calcForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const acres = parseFloat(document.getElementById('acres').value);
+    const h_spacing = parseFloat(document.getElementById('h_spacing').value);
+    const v_spacing = parseFloat(document.getElementById('v_spacing').value);
+
+    if (acres && h_spacing && v_spacing) {
+      // 1 Acre = 43,560 Square Feet
+      const sqFtPerAcre = 43560;
+      const totalSqFt = acres * sqFtPerAcre;
+
+      // Area required per plant = Horizontal Spacing * Vertical Spacing
+      const areaPerPlant = h_spacing * v_spacing;
+
+      if (areaPerPlant > 0) {
+        const totalPlants = Math.floor(totalSqFt / areaPerPlant);
+
+        document.getElementById('totalSqFt').textContent = totalSqFt.toLocaleString();
+        document.getElementById('totalPlants').textContent = totalPlants.toLocaleString();
+        document.getElementById('result').classList.remove('d-none');
+      }
+    }
+  });
+
+  // Real-time update for acres text
+  document.getElementById('acres').addEventListener('input', function (e) {
+    const val = parseFloat(e.target.value);
+    if (val) {
+      const sqft = (val * 43560).toLocaleString();
+      document.getElementById('areaInFeet').textContent = `${val} Acres = ${sqft} sq. ft.`;
+    } else {
+      document.getElementById('areaInFeet').textContent = "1 Acre = 43,560 sq. ft.";
+    }
+  });
+</script>
+{% endblock %}

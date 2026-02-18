@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Search Results for "{{ query }}"</h2>
+
+{% if not products and not users %}
+<p>No results found.</p>
+{% else %}
+
+{% if products %}
+<h3>Products</h3>
+<div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
+  {% for product in products %}
+  <div class="col">
+    <div class="card h-100 shadow-sm">
+      <img src="{{ product.image_url or 'https://via.placeholder.com/300x200?text=Product' }}" class="card-img-top"
+        alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+      <div class="card-body">
+        <h5 class="card-title">{{ product.name }}</h5>
+        <p class="card-text text-muted small">by {{ product.seller.username }}</p>
+        <p class="card-text">{{ product.description|truncate(100) }}</p>
+        <h5 class="text-success">₹{{ product.price }} / plant</h5>
+      </div>
+      <div class="card-footer bg-transparent border-top-0">
+        <div class="d-grid">
+          <a href="{{ url_for('main.product_details', product_id=product.id) }}" class="btn btn-outline-success">View
+            Details</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if users %}
+<h3>Users</h3>
+<div class="list-group">
+  {% for user in users %}
+  <a href="{{ url_for('main.profile', username=user.username) }}" class="list-group-item list-group-item-action">
+    {{ user.username }} ({{ user.role }})
+  </a>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% endif %}
+{% endblock %}

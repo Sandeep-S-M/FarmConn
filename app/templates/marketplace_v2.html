@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2>Marketplace V2</h2>
+  <a href="#" class="btn btn-success"><i class="bi bi-plus-lg"></i> Sell Product</a>
+</div>
+
+<p>DEBUG PRODUCTS: {{ products }}</p>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+  {% for product in products %}
+  <div class="col">
+    <div class="card h-100 shadow-sm">
+      <img src="{{ product.image_url or 'https://via.placeholder.com/300x200?text=Product' }}" class="card-img-top"
+        alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+      <div class="card-body">
+        <h5 class="card-title">{{ product.name }}</h5>
+        <p class="card-text text-muted small">by {{ product.seller.username }}</p>
+        <p class="card-text">{{ product.description|truncate(100) }}</p>
+        <h5 class="text-success">${{ product.price }}</h5>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="col-12 text-center py-5">
+    <h3>No products found</h3>
+    <p class="text-muted">Be the first to list something!</p>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
